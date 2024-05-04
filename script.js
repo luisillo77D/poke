@@ -1,36 +1,152 @@
-let pokemones = [];
+let pokeEquipo = [];
+let equipos = [];
 const pokeContainer = document.getElementById("poke-container");
+const pokeContainerEquipo = document.getElementById("poke-container-equipo");
+const pokeInput = document.getElementById("name");
+
 document.getElementById("save").addEventListener("click", async function () {
-  const pokemonName = document.getElementById("name").value;
-  pokemones.push(await getPokemon(pokemonName));
-  console.log(pokemones);
+  const pokemonName = pokeInput.value;
+  if (!pokemonName) {
+    showAlert("Ingrese un nombre de pokemon");
+    return;
+  }
+  const pokemon = await getPokemon(pokemonName);
+  if (!pokemon) {
+    return;
+  }
+  pokeEquipo.push(pokemon);
+  pokeInput.value = "";
+
+  if (pokeEquipo.length >= 3) {
+    //desactivar boton
+    document.getElementById("save").disabled = true;
+    pokeInput.disabled = true;
+    equipos.push(pokeEquipo);
+    displayCurrentTeam();
+  }
+  console.log(pokeEquipo);
 });
+
 async function getPokemon(name) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-  return response.json();
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    if (response.status === 404) {
+      showAlert("Pokemon no encontrado");
+      return;
+    }
+    return response.json();
+  } catch (error) {
+    showAlert("Error al obtener el pokemon");
+  }
 }
 
-document.getElementById("show").addEventListener("click", function () {
-  displayPokemon();
+document.getElementById("teams").addEventListener("click", function () {
+  displayTeamHistory();
 });
 
-function displayPokemon() {
-  pokeContainer.innerHTML = "";
-  pokemones.map((pokemon) => {
-    console.log(pokemon);
-    const div = document.createElement("div");
-    div.innerHTML = `<h1>${pokemon.name}<span>  #${pokemon.id}</span> </h1>
-    <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" />
-    <p>Altura: ${pokemon.height/10} m</p>
-    <p>Peso: ${pokemon.weight/10} kg</p>
-    <div>
-    <h2>Tipos</h2>
-    <ul>
-    ${pokemon.types.map((type) => `<li>${type.type.name}</li>`).join("")}
-    </ul>
-    </div>
+document.getElementById("reset").addEventListener("click", function () {
+  pokeEquipo = [];
+  document.getElementById("save").disabled = false;
+  pokeInput.disabled = false;
+  pokeContainerEquipo.innerHTML = "";
+});
 
+function displayCurrentTeam() {
+  pokeContainerEquipo.innerHTML = "";
+  pokeEquipo.map((pokemon) => {
+    const div = document.createElement("div");
+    div.classList.add("card");
+    div.innerHTML = `
+    <div class="row g-0">
+      <div class="col-md-3">
+        <img src="${pokemon.sprites.front_default}" class="img-fluid rounded-start" alt="${pokemon.name}">
+      </div>
+      <div class="col-md-9">
+        <div class="card-body align-items-center d-flex gap-2">
+          <h5>${pokemon.name}<span>  #${pokemon.id}</span> </h5>
+          <div class="card-text">
+            Habilidad:
+            <div class="card-text">${pokemon.abilities[0].ability.name}</div>
+          </div>
+        </div>
+      </div>
+    </div>
     `;
-    pokeContainer.appendChild(div);
+    pokeContainerEquipo.appendChild(div);
   });
+}
+
+//FUNCION PARA ORDERNAR UN EQUIPO DE POKEMONES POR EXPERIENCIA
+function orderTeamByExperience(team) {
+  return team.sort((a, b) => a.base_experience - b.base_experience);
+}
+
+function displayTeamHistory() {
+  pokeContainer.innerHTML = "";
+  let contador = 0;
+  let equipoID = 0;
+  equipos.map((equipo) => {
+    equipo = orderTeamByExperience(equipo);
+    equipoID++;
+    const divRow = document.createElement("div");
+    const divcard = document.createElement("div");
+    divcard.classList.add("card", "m-2");
+    divRow.classList.add("row", "justify-content-center", "m-2");
+    divRow.innerHTML = `
+      <h4>#Equipo ${equipoID}</h4>`;
+    equipo.map((pokemon) => {
+      //contador
+      contador++;
+
+      console.log(pokemon);
+
+      const div = document.createElement("div");
+      div.classList.add("card", "col-4", "border-2");
+      div.innerHTML = `
+      <div class="row g-0 position-relative">
+        <div class="col-md-3">
+          <img src="${pokemon.sprites.front_default}" class="img-fluid rounded-start" alt="${pokemon.name}">
+        </div>
+        <div class="col-md-6">
+          <div class="card-body align-items-center">
+            <h5>${pokemon.name}<span>  #${pokemon.id}</span> </h5>
+            <div class="card-text">
+              Habilidad:
+              <div class="card-text">${pokemon.abilities[0].ability.name}</div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="col-2 align-items-center d-flex">
+          <span class="badge rounded-pill bg-danger fs-6 w-100" >
+          xp:${pokemon.base_experience}
+          </span>
+        </div>
+      </div>
+      `;
+
+      divRow.appendChild(div);
+      divcard.appendChild(divRow);
+      pokeContainer.appendChild(divcard);
+    });
+  });
+}
+
+//FUNCION para mostrar una alerta con un texto personalizado con bootstrap
+function showAlert(message) {
+  const alert = document.createElement("div");
+  alert.classList.add(
+    "alert",
+    `alert-danger`,
+    "mt-3",
+    "position-absolute",
+    "top-50",
+    "start-50",
+    "translate-middle"
+  );
+  alert.textContent = message;
+  document.getElementById("alert-container").appendChild(alert);
+  setTimeout(() => {
+    alert.remove();
+  }, 2000);
 }
