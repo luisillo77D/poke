@@ -1,0 +1,19 @@
+/* Error: Undefined variable.
+ *    ,
+ * 68 |   "bug":       $green-800,
+ *    |                ^^^^^^^^^^
+ *    '
+ *   node_modules\bootstrap\scss\_variables.scss 68:16  @import
+ *   node_modules\bootstrap\scss\bootstrap.scss 8:9     @import
+ *   scss\custom.scss 3:9                               root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: 'Error: Undefined variable.\a    \2577 \a 68 \2502    "bug":       $green-800,\a    \2502                 ^^^^^^^^^^\a    \2575 \a   node_modules\\bootstrap\\scss\\_variables.scss 68:16  @import\a   node_modules\\bootstrap\\scss\\bootstrap.scss 8:9     @import\a   scss\\custom.scss 3:9                               root stylesheet';
+}

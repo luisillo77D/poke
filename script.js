@@ -3,6 +3,24 @@ let equipos = [];
 const pokeContainer = document.getElementById("poke-container");
 const pokeContainerEquipo = document.getElementById("poke-container-equipo");
 const pokeInput = document.getElementById("name");
+//objeto con los colores de los tipos de pokemon
+const colors = {
+  fire: "#fddfdf",
+  grass: "#defde0",
+  electric: "#fcf7de",
+  water: "#def3fd",
+  ground: "#BB8C5C",
+  rock: "#96631E",
+  fairy: "#fceaff",
+  poison: "#EB70FF",
+  bug: "#219929",
+  dragon: "#A0DCD8",
+  psychic: "#F04FCE",
+  flying: "#C2E0E0",
+  fighting: "#DB6E28",
+  normal: "#DAC7D6",
+};
+let colorFondo
 
 document.getElementById("save").addEventListener("click", async function () {
   const pokemonName = pokeInput.value;
@@ -51,11 +69,17 @@ document.getElementById("reset").addEventListener("click", function () {
   pokeContainerEquipo.innerHTML = "";
 });
 
+
+
 function displayCurrentTeam() {
   pokeContainerEquipo.innerHTML = "";
   pokeEquipo.map((pokemon) => {
+    //dependiendo del tipo de pokemon se le asigna un color de fondo
     const div = document.createElement("div");
     div.classList.add("card");
+
+    colorFondo = colors[pokemon.types[0].type.name];
+    div.style.backgroundColor = colorFondo;
     div.innerHTML = `
     <div class="row g-0">
       <div class="col-md-3">
@@ -97,10 +121,11 @@ function displayTeamHistory() {
     equipo.map((pokemon) => {
       //contador
       contador++;
-
       console.log(pokemon);
-
       const div = document.createElement("div");
+      colorFondo = colors[pokemon.types[0].type.name];
+      div.style.backgroundColor = colorFondo;
+
       div.classList.add("card", "col-4", "border-2");
       div.innerHTML = `
       <div class="row g-0 position-relative">
