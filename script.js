@@ -114,10 +114,10 @@ function displayTeamHistory() {
     equipoID++;
     const divRow = document.createElement("div");
     const divcard = document.createElement("div");
-    divcard.classList.add("card", "m-2");
-    divRow.classList.add("row", "justify-content-center", "m-2");
+    divcard.classList.add("card", "m-2","shadow","bg-primary-subtle");
+    divRow.classList.add("row", "justify-content-center", "m-2",);
     divRow.innerHTML = `
-      <h4>#Equipo ${equipoID}</h4>`;
+      <h4>Equipo #${equipoID}</h4>`;
     equipo.map((pokemon) => {
       //contador
       contador++;
