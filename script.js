@@ -34,6 +34,7 @@ document.getElementById("save").addEventListener("click", async function () {
   }
   pokeEquipo.push(pokemon);
   pokeInput.value = "";
+  displayCurrentTeam();
 
   if (pokeEquipo.length >= 3) {
     //desactivar boton
