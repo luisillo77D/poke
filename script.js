@@ -20,7 +20,7 @@ const colors = {
   fighting: "#DB6E28",
   normal: "#DAC7D6",
 };
-let colorFondo
+let colorFondo;
 
 document.getElementById("save").addEventListener("click", async function () {
   const pokemonName = pokeInput.value;
@@ -69,30 +69,37 @@ document.getElementById("reset").addEventListener("click", function () {
   pokeContainerEquipo.innerHTML = "";
 });
 
-
-
 function displayCurrentTeam() {
   pokeContainerEquipo.innerHTML = "";
+  const titulo = document.createElement("h4");
+  titulo.textContent = "Equipo actual";
+  titulo.classList.add("text-light");
+  pokeContainerEquipo.appendChild(titulo);
   pokeEquipo.map((pokemon) => {
-    //dependiendo del tipo de pokemon se le asigna un color de fondo
+    console.log(pokemon);
     const div = document.createElement("div");
-    div.classList.add("card");
-
     colorFondo = colors[pokemon.types[0].type.name];
     div.style.backgroundColor = colorFondo;
+    div.classList.add("card", "col-12", "border-2", "my-2");
     div.innerHTML = `
-    <div class="row g-0">
+    <div class="row g-0 position-relative">
       <div class="col-md-3">
         <img src="${pokemon.sprites.front_default}" class="img-fluid rounded-start" alt="${pokemon.name}">
       </div>
-      <div class="col-md-9">
-        <div class="card-body align-items-center d-flex gap-2">
+      <div class="col-md-6">
+        <div class="card-body align-items-center">
           <h5>${pokemon.name}<span>  #${pokemon.id}</span> </h5>
           <div class="card-text">
             Habilidad:
             <div class="card-text">${pokemon.abilities[0].ability.name}</div>
           </div>
+          
         </div>
+      </div>
+      <div class="col-2 align-items-center d-flex">
+        <span class="badge rounded-pill bg-danger fs-6 w-100" >
+        xp:${pokemon.base_experience}
+        </span>
       </div>
     </div>
     `;
@@ -107,25 +114,27 @@ function orderTeamByExperience(team) {
 
 function displayTeamHistory() {
   pokeContainer.innerHTML = "";
-  let contador = 0;
   let equipoID = 0;
+
+  const titulo = document.createElement("h4");
+  titulo.textContent = "Historial de equipos";
+  titulo.classList.add("text-light","py-3");
+  pokeContainer.appendChild(titulo);
+
   equipos.map((equipo) => {
     equipo = orderTeamByExperience(equipo);
     equipoID++;
     const divRow = document.createElement("div");
     const divcard = document.createElement("div");
-    divcard.classList.add("card", "m-2","shadow","bg-primary-subtle");
-    divRow.classList.add("row", "justify-content-center", "m-2",);
+    divcard.classList.add("card", "m-2", "shadow", "bg-primary-subtle");
+    divRow.classList.add("row", "justify-content-center", "m-2");
     divRow.innerHTML = `
       <h4>Equipo #${equipoID}</h4>`;
     equipo.map((pokemon) => {
-      //contador
-      contador++;
       console.log(pokemon);
       const div = document.createElement("div");
       colorFondo = colors[pokemon.types[0].type.name];
       div.style.backgroundColor = colorFondo;
-
       div.classList.add("card", "col-4", "border-2");
       div.innerHTML = `
       <div class="row g-0 position-relative">
@@ -157,7 +166,7 @@ function displayTeamHistory() {
   });
 }
 
-//FUNCION para mostrar una alerta con un texto personalizado con bootstrap
+//FUNCION para mostrar una alerta con un texto personalizado
 function showAlert(message) {
   const alert = document.createElement("div");
   alert.classList.add(
